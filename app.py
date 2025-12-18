@@ -165,12 +165,18 @@ def extract_bom_with_tables(file_path, chunk_size=75):
     all_bom_items = []
     raw_outputs = []
 
-    for t in tables[:1]:
 
+    for t in tables:
         rows = t["data"]
         logger.info(f"Processing page {t['page']} with {len(rows)} rows...")
 
         for i in range(0, len(rows), chunk_size):
+            # --- TEMPORARY: Stop after 15 items processed ---
+            # REMOVE THIS CHECK LATER!
+            if len(all_bom_items) >= 15:
+                logger.warning("TEMP: Stopping BOM extraction after 15 items (remove this check later!)")
+                break
+
             chunk = rows[i:i+chunk_size]
             chunk_text = "\n".join([", ".join(r) for r in chunk])
 
